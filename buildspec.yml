@@ -1,0 +1,10 @@
+version: 0.2
+
+env:
+  shell: bash
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo Running build
