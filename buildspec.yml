@@ -7,4 +7,16 @@ phases:
     runtime-versions:
       python: 3.8
     commands:
-      - echo Running build
+      - echo "Installing HashiCorp Packer..."
+      - curl -qL -o /tmp/packer.zip https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_linux_amd64.zip
+      - unzip -o /tmp/packer.zip -d /usr/bin
+      - echo "Installing jq..."
+      - curl -qL -o /usr/bin/jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/bin/jq
+      - echo "Installing HashiCorp Terraform..."
+      - curl -qL -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+      - unzip -o /tmp/terraform.zip -d /usr/bin
+  pre_build:
+    commands:
+      - cd app-iac
+      - terraform init
+      - terraform plan
