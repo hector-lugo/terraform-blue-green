@@ -64,7 +64,9 @@ data "aws_iam_policy_document" "codebuild" {
 
     resources = [
       var.artifact_bucket_arn,
-      "${var.artifact_bucket_arn}/*"
+      "${var.artifact_bucket_arn}/*",
+      var.terraform_backend_bucket_arn,
+      "${var.terraform_backend_bucket_arn}/*"
     ]
   }
 
@@ -73,11 +75,24 @@ data "aws_iam_policy_document" "codebuild" {
     effect = "Allow"
 
     actions = [
-      "codecommit:GitPull",
+      "codecommit:GitPull"
     ]
 
     resources = [
       var.repository_arn,
+    ]
+  }
+
+  statement {
+    sid    = "AllowEC2Access"
+    effect = "Allow"
+
+    actions = [
+      "ec2:*"
+    ]
+
+    resources = [
+      "*"
     ]
   }
 }

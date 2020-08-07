@@ -22,6 +22,11 @@ variable "artifact_bucket_arn" {
   type        = string
 }
 
+variable "terraform_backend_bucket_arn" {
+  description = "ARN of the bucket storing the terraform state file"
+  type        = string
+}
+
 variable "repository_arn" {
   description = "ARN of the repository"
   type        = string

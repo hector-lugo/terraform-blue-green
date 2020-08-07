@@ -1,3 +1,78 @@
+resource "aws_iam_role" "codecommit-event-role" {
+  name = format("%s-%s-codecommit-event-role", var.pipeline_name, var.prefix)
+
+  assume_role_policy = <<DOC
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "events.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+DOC
+}
+
+# Allow CloudWatch Events to start a CodePipline pipeline
+resource "aws_iam_policy" "codecommit-event-policy" {
+  name        = format("%s-%s-codecommit-event-policy", var.pipeline_name, var.prefix)
+  description = "cloud-native-codepipeline-policy-2"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "codepipeline:StartPipelineExecution"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_policy_attachment" "cloud-native-codepipeline-attach-2" {
+  name       = "cloud-native-codepipeline-attach-2"
+  roles      = [aws_iam_role.codecommit-event-role.name]
+  policy_arn = aws_iam_policy.codecommit-event-policy.arn
+}
+
+resource "aws_cloudwatch_event_rule" "client-donation-reports-codepipeline-notifications" {
+  name        = "client-donation-reports-codepipeline-notifications"
+  description = "CodePipeline notifications for client-donation-reports"
+
+  event_pattern = <<PATTERN
+{
+  "source": [ "aws.codecommit" ],
+  "detail-type": [ "CodeCommit Repository State Change" ],
+  "resources": [ "${var.repository_arn}" ],
+  "detail": {
+     "event": [
+       "referenceCreated",
+       "referenceUpdated"],
+     "referenceType":["branch"],
+     "referenceName": ["master"]
+  }
+}
+PATTERN
+}
+
+resource "aws_cloudwatch_event_target" "client-donation-reports-ecr-target" {
+  rule      = aws_cloudwatch_event_rule.client-donation-reports-codepipeline-notifications.name
+  role_arn  = aws_iam_role.codecommit-event-role.arn
+  arn       = aws_codepipeline.main.arn
+}
+
 data "aws_iam_policy_document" "codepipeline_assumerole" {
   statement {
     sid    = "AllowCodePipelineAssumeRole"
@@ -64,6 +139,17 @@ data "aws_iam_policy_document" "codepipeline" {
     actions = [
       "codebuild:BatchGetBuilds", # TODO: *
       "codebuild:StartBuild",     # TODO: specific
+    ]
+
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "AllowCloudWatch"
+    effect = "Allow"
+
+    actions = [
+      "cloudwatch:*",
     ]
 
     resources = ["*"]

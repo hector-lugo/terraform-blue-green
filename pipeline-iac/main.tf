@@ -1,3 +1,7 @@
+data "aws_s3_bucket" "terraform_backend_bucket" {
+  bucket = "hlugo-terraform-backend"
+}
+
 module "repository" {
   source = "./modules/repository"
 }
@@ -11,6 +15,7 @@ module "codebuild" {
   artifact_bucket_arn = module.s3.artifacts_bucket_arn
   repository_arn = module.repository.repository_arn
   pipeline_name = var.pipeline_name
+  terraform_backend_bucket_arn = data.aws_s3_bucket.terraform_backend_bucket.arn
 }
 
 module "codepipeline" {
