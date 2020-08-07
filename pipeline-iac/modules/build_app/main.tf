@@ -1,15 +1,3 @@
-resource "aws_cloudwatch_log_group" "codepipeline" {
-  name  = "/aws/codepipeline/${var.pipeline_name}"
-
-  retention_in_days = 7
-}
-
-resource "aws_cloudwatch_log_group" "codebuild_planner" {
-  name  = "/aws/codebuild/${var.project_name}"
-
-  retention_in_days = 7
-}
-
 data "aws_iam_policy_document" "codebuild_assumerole" {
   statement {
     sid    = "AllowCodeBuildAssumeRole"
@@ -45,8 +33,8 @@ data "aws_iam_policy_document" "codebuild" {
     ]
 
     resources = [
-      "${aws_cloudwatch_log_group.codepipeline.arn}:*",
-      "${aws_cloudwatch_log_group.codebuild_planner.arn}:*",
+      "${var.pipeline_log_group_arn}:*",
+      "${var.log_group_arn}:*"
     ]
   }
 
@@ -137,7 +125,7 @@ resource "aws_codebuild_project" "project" {
 
   logs_config {
     cloudwatch_logs {
-      group_name = aws_cloudwatch_log_group.codepipeline.name
+      group_name = var.pipeline_log_group_name
     }
   }
 }

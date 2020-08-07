@@ -11,25 +11,16 @@ variable "pipeline_name" {
   type        = string
 }
 
-variable "project_name" {
-  description = "Name of the project"
+variable "build_project_name" {
+  description = "Name of the build project"
   type        = string
   default = "terraform-blue-green-project"
 }
 
-variable "artifact_bucket_arn" {
-  description = "ARN of the bucket to store the artifacts on"
+variable "deploy_project_name" {
+  description = "Name of the deployment project"
   type        = string
-}
-
-variable "terraform_backend_bucket_arn" {
-  description = "ARN of the bucket storing the terraform state file"
-  type        = string
-}
-
-variable "repository_arn" {
-  description = "ARN of the repository"
-  type        = string
+  default = "terraform-blue-green-deployment-project"
 }
 
 variable "tags" {

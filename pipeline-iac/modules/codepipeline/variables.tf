@@ -36,8 +36,13 @@ variable "repository_name" {
   type        = string
 }
 
-variable "codebuild_project" {
-  description = "Clone url of the repository"
+variable "build_project" {
+  description = "Codebuild project used to build the application"
+  type        = string
+}
+
+variable "deployment_project" {
+  description = "Codebuild project used to deploy the application"
   type        = string
 }
 

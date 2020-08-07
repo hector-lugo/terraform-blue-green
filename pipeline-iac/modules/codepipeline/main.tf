@@ -137,8 +137,8 @@ data "aws_iam_policy_document" "codepipeline" {
     effect = "Allow"
 
     actions = [
-      "codebuild:BatchGetBuilds", # TODO: *
-      "codebuild:StartBuild",     # TODO: specific
+      "codebuild:BatchGetBuilds",
+      "codebuild:StartBuild",
     ]
 
     resources = ["*"]
@@ -210,7 +210,34 @@ resource "aws_codepipeline" "main" {
       output_artifacts = ["ApplicationArtifacts"]
 
       configuration = {
-        ProjectName          = var.codebuild_project
+        ProjectName          = var.build_project
+      }
+    }
+  }
+
+  stage {
+    name = "Approve"
+
+    action {
+      name     = "Approval"
+      category = "Approval"
+      owner    = "AWS"
+      provider = "Manual"
+      version  = "1"
+    }
+
+    action {
+      name             = "Deploy"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      run_order        = 2
+      input_artifacts  = ["SourceArtifact"]
+      output_artifacts = ["DeploymentArtifacts"]
+
+      configuration = {
+        ProjectName          = var.deployment_project
       }
     }
   }
