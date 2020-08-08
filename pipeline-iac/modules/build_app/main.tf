@@ -45,7 +45,7 @@ data "aws_iam_policy_document" "codebuild" {
     actions = [
       "s3:PutObject",
       "s3:Get*",
-      "s3:List*",
+      "s3:List*"
     ]
 
     resources = [

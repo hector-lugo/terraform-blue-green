@@ -44,10 +44,8 @@ data "aws_iam_policy_document" "codebuild" {
 
     actions = [
       "s3:PutObject",
-      "s3:GetObject",
-      "s3:GetObjectVersion",
-      "s3:GetBucketAcl",
-      "s3:GetBucketLocation",
+      "s3:Get*",
+      "s3:List*"
     ]
 
     resources = [
@@ -98,11 +96,18 @@ data "aws_iam_policy_document" "codebuild" {
   }
 
   statement {
-    sid    = "AllowRoleInspect"
+    sid    = "IAMAccess"
     effect = "Allow"
 
     actions = [
       "iam:GetRole",
+      "iam:CreateRole",
+      "iam:PassRole",
+      "iam:AttachRolePolicy",
+      "iam:CreateInstanceProfile",
+      "iam:AddRoleToInstanceProfile",
+      "iam:RemoveRoleFromInstanceProfile",
+      "iam:DeleteInstanceProfile",
       "iam:ListAttachedRolePolicies",
       "iam:GetInstanceProfile"
     ]
@@ -117,7 +122,8 @@ data "aws_iam_policy_document" "codebuild" {
     effect = "Allow"
 
     actions = [
-      "autoscaling:DescribeAutoScalingGroups"
+      "autoscaling:DescribeAutoScalingGroups",
+      "autoscaling:CreateAutoScalingGroup"
     ]
 
     resources = [

@@ -216,7 +216,7 @@ resource "aws_codepipeline" "main" {
   }
 
   stage {
-    name = "Approve"
+    name = "StartDeployment"
 
     action {
       name     = "Approval"
