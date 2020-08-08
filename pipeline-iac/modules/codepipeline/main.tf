@@ -1,4 +1,4 @@
-resource "aws_iam_role" "codecommit-event-role" {
+resource "aws_iam_role" "codecommit_event_role" {
   name = format("%s-%s-codecommit-event-role", var.pipeline_name, var.prefix)
 
   assume_role_policy = <<DOC
@@ -41,15 +41,15 @@ resource "aws_iam_policy" "codecommit-event-policy" {
 EOF
 }
 
-resource "aws_iam_policy_attachment" "cloud-native-codepipeline-attach-2" {
-  name       = "cloud-native-codepipeline-attach-2"
-  roles      = [aws_iam_role.codecommit-event-role.name]
+resource "aws_iam_policy_attachment" "codepipeline_policy_attachement" {
+  name       = format("%s-%s-pipeline_policy", var.pipeline_name, var.prefix)
+  roles      = [aws_iam_role.codecommit_event_role.name]
   policy_arn = aws_iam_policy.codecommit-event-policy.arn
 }
 
-resource "aws_cloudwatch_event_rule" "client-donation-reports-codepipeline-notifications" {
-  name        = "client-donation-reports-codepipeline-notifications"
-  description = "CodePipeline notifications for client-donation-reports"
+resource "aws_cloudwatch_event_rule" "codecommit_event_rule" {
+  name        = format("%s-%s-codecommit_event_rule", var.pipeline_name, var.prefix)
+  description = "CodePipeline notification"
 
   event_pattern = <<PATTERN
 {
@@ -67,9 +67,9 @@ resource "aws_cloudwatch_event_rule" "client-donation-reports-codepipeline-notif
 PATTERN
 }
 
-resource "aws_cloudwatch_event_target" "client-donation-reports-ecr-target" {
-  rule      = aws_cloudwatch_event_rule.client-donation-reports-codepipeline-notifications.name
-  role_arn  = aws_iam_role.codecommit-event-role.arn
+resource "aws_cloudwatch_event_target" "codecommit_event_target" {
+  rule      = aws_cloudwatch_event_rule.codecommit_event_rule.name
+  role_arn  = aws_iam_role.codecommit_event_role.arn
   arn       = aws_codepipeline.main.arn
 }
 

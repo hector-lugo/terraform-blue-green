@@ -4,6 +4,8 @@ resource "aws_s3_bucket" "artifacts_bucket" {
   bucket = format("%s-pipeline-bucket", var.prefix)
   acl    = "private"
 
+  force_destroy = true
+
   versioning {
     enabled = true
   }
