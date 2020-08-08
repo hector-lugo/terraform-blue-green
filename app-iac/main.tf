@@ -18,7 +18,7 @@ module "green_env" {
   alb_subnets = module.network.public_subnets
   server_subnets = module.network.private_subnets
   deployment_name = "green-env"
-  ami_id = var.blue_env_ami_id
+  ami_id = var.green_env_ami_id
   instance_type = "t2.micro"
 }
 

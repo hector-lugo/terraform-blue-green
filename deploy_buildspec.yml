@@ -2,15 +2,17 @@ version: 0.2
 
 env:
   shell: bash
+  parameter-store:
+    CURRENT_AMI: "/hlugo/terraform-bg/current-ami"
+    CURRENT_ENV: "/hlugo/terraform-bg/current-env"
 phases:
   install:
     commands:
       - echo "Using blue percent $BLUE_TRAFFIC_PERCENT"
       - echo "Using green percent $GREEN_TRAFFIC_PERCENT"
       - echo "Using green $GREEN_ENV_ENABLED"
-      - echo "Installing HashiCorp Packer..."
-      - curl -qL -o /tmp/packer.zip https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_linux_amd64.zip
-      - unzip -o /tmp/packer.zip -d /usr/bin
+      - echo "Current AMI $CURRENT_AMI"
+      - echo "Current ENV $CURRENT_ENV"
       - echo "Installing jq..."
       - curl -qL -o /usr/bin/jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/bin/jq
       - echo "Installing HashiCorp Terraform..."
@@ -18,6 +20,13 @@ phases:
       - unzip -o /tmp/terraform.zip -d /usr/bin
   build:
     commands:
+      - AMI_ID=$(jq '.builds[0].artifact_id' $CODEBUILD_SRC_DIR_BuildArtifacts/manifest.json | cut -d ":" -f2)
+      - |
+        if [ $CODEBUILD_BUILD_SUCCEEDING -eq 0 ]; then
+          curl -u tcourtnage:$TOKEN -H 'Content-Type: application/json' -X POST https://stash.benevity.org/rest/build-status/1.0/commits/$COMMIT -d "{\"state\": \"FAILED\",\"key\": \"client-donation-reports\",\"name\": \"CodeBuild » ${PROJECT_NAME} » ${CODEBUILD_BUILD_NUMBER}\",\"url\": \"${BUILD_LINK}\",\"description\": \"$BITBUCKET_MESSAGE\"}"
+        else
+          curl -u tcourtnage:$TOKEN -H 'Content-Type: application/json' -X POST https://stash.benevity.org/rest/build-status/1.0/commits/$COMMIT -d "{\"state\": \"SUCCESSFUL\",\"key\": \"client-donation-reports\",\"name\": \"CodeBuild » ${PROJECT_NAME} » ${CODEBUILD_BUILD_NUMBER}\",\"url\": \"${BUILD_LINK}\",\"description\": \"$BITBUCKET_MESSAGE\"}"
+        fi
       - cd app-iac
       - terraform init
       - terraform apply -auto-approve

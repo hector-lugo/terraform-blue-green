@@ -16,11 +16,16 @@
     {
       "type": "shell",
       "inline": [
+        "sudo yum update -y",
+        "sudo amazon-linux-extras install -y php7.2",
         "sudo yum install -y httpd",
-        "sudo chkconfig httpd on",
-        "sudo service httpd start",
-        "sudo chown -R ec2-user:ec2-user /var/www/",
-        "echo '<h1>Welcome to Packer</h1>' > /var/www/html/index.html"
+        "sudo systemctl start httpd",
+        "sudo systemctl enable httpd",
+        "sudo usermod -a -G apache ec2-user",
+        "sudo chown -R ec2-user:apache /var/www",
+        "sudo find /var/www -type d -exec chmod 2775 {} \\;",
+        "sudo find /var/www -type f -exec chmod 0664 {} \\;",
+        "echo \"<p>Deployment name: $CODEBUILD_BUILD_ID</p>\" > /var/www/html/index.php"
       ]
     }
   ],

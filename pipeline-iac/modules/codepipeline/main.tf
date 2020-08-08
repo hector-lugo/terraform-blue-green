@@ -207,7 +207,7 @@ resource "aws_codepipeline" "main" {
       version          = "1"
       run_order        = 1
       input_artifacts  = ["SourceArtifact"]
-      output_artifacts = ["ApplicationArtifacts"]
+      output_artifacts = ["BuildArtifacts"]
 
       configuration = {
         ProjectName          = var.build_project
@@ -233,10 +233,12 @@ resource "aws_codepipeline" "main" {
       provider         = "CodeBuild"
       version          = "1"
       run_order        = 2
-      input_artifacts  = ["SourceArtifact"]
+
+      input_artifacts  = ["SourceArtifact", "BuildArtifacts"]
       output_artifacts = ["DeploymentArtifacts"]
 
       configuration = {
+        PrimarySource = "SourceArtifact"
         ProjectName          = var.deployment_project
         EnvironmentVariables = file("${path.module}/deployment_configs/bootstrap.json")
       }

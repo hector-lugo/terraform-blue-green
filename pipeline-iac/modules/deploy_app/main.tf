@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "codebuild_assumerole" {
   statement {
     sid    = "AllowCodeBuildAssumeRole"
@@ -35,6 +37,21 @@ data "aws_iam_policy_document" "codebuild" {
     resources = [
       "${var.pipeline_log_group_arn}:*",
       "${var.log_group_arn}:*"
+    ]
+  }
+
+  statement {
+    sid    = "AllowParamterStore"
+    effect = "Allow"
+
+    actions = [
+      "ssm:DescribeParameters",
+      "ssm:GetParameter",
+      "ssm:GetParameters"
+    ]
+
+    resources = [
+      "arn:aws:ssm:us-east-1:${data.aws_caller_identity.current.account_id}:parameter/hlugo*"
     ]
   }
 
