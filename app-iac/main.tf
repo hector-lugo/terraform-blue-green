@@ -25,8 +25,8 @@ module "green_env" {
 module "blue_route" {
   source = "./modules/routing"
   set_identifier = "blue"
-  dns_record = "prod.webpageorigami.com"
-  hosted_zone = "webpageorigami.com"
+  dns_record = "tbg.benevity-poc.org"
+  hosted_zone = "benevity-poc.org"
   load_balancer_dns = module.blue_env.load_balancer_dns
   load_balancer_zone_id = module.blue_env.load_balancer_zone_id
   weight = 50
@@ -35,8 +35,8 @@ module "blue_route" {
 module "green_route" {
   source = "./modules/routing"
   set_identifier = "green"
-  dns_record = "prod.webpageorigami.com"
-  hosted_zone = "webpageorigami.com"
+  dns_record = "tbg.benevity-poc.org"
+  hosted_zone = "benevity-poc.org"
   load_balancer_dns = module.green_env.load_balancer_dns
   load_balancer_zone_id = module.green_env.load_balancer_zone_id
   weight = 50
