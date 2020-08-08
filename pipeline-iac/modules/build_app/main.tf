@@ -83,6 +83,60 @@ data "aws_iam_policy_document" "codebuild" {
       "*"
     ]
   }
+
+  statement {
+    sid    = "AllowELBAccess"
+    effect = "Allow"
+
+    actions = [
+      "elasticloadbalancing:*"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+
+  statement {
+    sid    = "AllowRoleInspect"
+    effect = "Allow"
+
+    actions = [
+      "iam:GetRole",
+      "iam:ListAttachedRolePolicies",
+      "iam:GetInstanceProfile"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+
+  statement {
+    sid    = "AutoScalingAccess"
+    effect = "Allow"
+
+    actions = [
+      "autoscaling:DescribeAutoScalingGroups"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+
+  statement {
+    sid    = "Route53Access"
+    effect = "Allow"
+
+    actions = [
+      "route53:*"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
 }
 
 resource "aws_iam_policy" "codebuild" {

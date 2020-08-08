@@ -238,6 +238,7 @@ resource "aws_codepipeline" "main" {
 
       configuration = {
         ProjectName          = var.deployment_project
+        EnvironmentVariables = file("${path.module}/deployment_configs/bootstrap.json")
       }
     }
   }

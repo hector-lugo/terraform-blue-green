@@ -4,9 +4,10 @@ env:
   shell: bash
 phases:
   install:
-    runtime-versions:
-      python: 3.8
     commands:
+      - echo "Using blue percent $BLUE_TRAFFIC_PERCENT"
+      - echo "Using green percent $GREEN_TRAFFIC_PERCENT"
+      - echo "Using green $GREEN_ENV_ENABLED"
       - echo "Installing HashiCorp Packer..."
       - curl -qL -o /tmp/packer.zip https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_linux_amd64.zip
       - unzip -o /tmp/packer.zip -d /usr/bin
@@ -15,7 +16,7 @@ phases:
       - echo "Installing HashiCorp Terraform..."
       - curl -qL -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
       - unzip -o /tmp/terraform.zip -d /usr/bin
-  pre_build:
+  build:
     commands:
       - cd app-iac
       - terraform init

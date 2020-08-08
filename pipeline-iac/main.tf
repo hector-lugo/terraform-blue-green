@@ -1,5 +1,5 @@
 data "aws_s3_bucket" "terraform_backend_bucket" {
-  bucket = "hlugo-terraform-backend"
+  bucket = "xpresso-terraform"
 }
 
 module "repository" {
