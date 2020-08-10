@@ -25,7 +25,7 @@
         "sudo chown -R ec2-user:apache /var/www",
         "sudo find /var/www -type d -exec chmod 2775 {} \\;",
         "sudo find /var/www -type f -exec chmod 0664 {} \\;",
-        "echo \"<p>Deployment name: $CODEBUILD_BUILD_ID</p>\" > /var/www/html/index.php"
+        "echo \"<p>Deployment id: $CODEBUILD_BUILD_ID</p>\" > /var/www/html/version.php"
       ]
     }
   ],

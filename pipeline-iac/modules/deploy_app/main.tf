@@ -119,13 +119,16 @@ data "aws_iam_policy_document" "codebuild" {
     actions = [
       "iam:GetRole",
       "iam:CreateRole",
+      "iam:DeleteRole",
       "iam:PassRole",
       "iam:AttachRolePolicy",
+      "iam:DetachRolePolicy",
       "iam:CreateInstanceProfile",
       "iam:AddRoleToInstanceProfile",
       "iam:RemoveRoleFromInstanceProfile",
       "iam:DeleteInstanceProfile",
       "iam:ListAttachedRolePolicies",
+      "iam:ListInstanceProfilesForRole",
       "iam:GetInstanceProfile"
     ]
 
@@ -140,6 +143,9 @@ data "aws_iam_policy_document" "codebuild" {
 
     actions = [
       "autoscaling:DescribeAutoScalingGroups",
+      "autoscaling:UpdateAutoScalingGroup",
+      "autoscaling:DeleteAutoScalingGroup",
+      "autoscaling:DeleteLaunchConfiguration",
       "autoscaling:CreateAutoScalingGroup"
     ]
 

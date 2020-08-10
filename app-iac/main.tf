@@ -2,42 +2,46 @@ module "network" {
   source = "./modules/network"
 }
 
-module "blue_env" {
+module "left_env" {
   source = "./modules/deployment"
   vpc_id = module.network.vpc_id
   alb_subnets = module.network.public_subnets
   server_subnets = module.network.private_subnets
-  deployment_name = "blue-env"
-  ami_id = var.blue_env_ami_id
+  deployment_name = "left-env"
+  ami_id = var.left_env_ami_id
   instance_type = "t2.micro"
+  enabled = var.left_env_enabled
 }
 
-module "green_env" {
+module "right_env" {
   source = "./modules/deployment"
   vpc_id = module.network.vpc_id
   alb_subnets = module.network.public_subnets
   server_subnets = module.network.private_subnets
-  deployment_name = "green-env"
-  ami_id = var.green_env_ami_id
+  deployment_name = "right-env"
+  ami_id = var.right_env_ami_id
   instance_type = "t2.micro"
+  enabled = var.right_env_enabled
 }
 
-module "blue_route" {
+module "left_route" {
   source = "./modules/routing"
-  set_identifier = "blue"
+  set_identifier = "left"
   dns_record = "tbg.benevity-poc.org"
   hosted_zone = "benevity-poc.org"
-  load_balancer_dns = module.blue_env.load_balancer_dns
-  load_balancer_zone_id = module.blue_env.load_balancer_zone_id
-  weight = 50
+  load_balancer_dns = module.left_env.load_balancer_dns
+  load_balancer_zone_id = module.left_env.load_balancer_zone_id
+  weight = var.left_env_routing_weight
+  enabled = var.left_env_enabled
 }
 
-module "green_route" {
+module "right_route" {
   source = "./modules/routing"
-  set_identifier = "green"
+  set_identifier = "right"
   dns_record = "tbg.benevity-poc.org"
   hosted_zone = "benevity-poc.org"
-  load_balancer_dns = module.green_env.load_balancer_dns
-  load_balancer_zone_id = module.green_env.load_balancer_zone_id
-  weight = 50
+  load_balancer_dns = module.right_env.load_balancer_dns
+  load_balancer_zone_id = module.right_env.load_balancer_zone_id
+  weight = var.right_env_routing_weight
+  enabled = var.right_env_enabled
 }

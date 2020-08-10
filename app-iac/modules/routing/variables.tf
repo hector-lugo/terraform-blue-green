@@ -27,3 +27,8 @@ variable "set_identifier" {
   description = "Set identifier, must be unique"
   type = string
 }
+
+variable "enabled" {
+  description = "Whether or not the route is enabled"
+  type = bool
+}

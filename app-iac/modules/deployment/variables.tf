@@ -27,3 +27,8 @@ variable "instance_type" {
   description = "Instance type to use for the deployment"
   type = string
 }
+
+variable "enabled" {
+  description = "Whether or not the environment is enabled"
+  type = bool
+}

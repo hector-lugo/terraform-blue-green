@@ -1,0 +1,17 @@
+[
+  {
+    "name": "BLUE_TRAFFIC_PERCENT",
+    "value": "80",
+    "type": "PLAINTEXT"
+  },
+  {
+    "name": "GREEN_TRAFFIC_PERCENT",
+    "value": "20",
+    "type": "PLAINTEXT"
+  },
+  {
+    "name": "GREEN_ENV_ENABLED",
+    "value": "1",
+    "type": "PLAINTEXT"
+  }
+]

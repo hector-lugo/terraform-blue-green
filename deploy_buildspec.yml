@@ -8,11 +8,7 @@ env:
 phases:
   install:
     commands:
-      - echo "Using blue percent $BLUE_TRAFFIC_PERCENT"
-      - echo "Using green percent $GREEN_TRAFFIC_PERCENT"
       - echo "Using green $GREEN_ENV_ENABLED"
-      - echo "Current AMI $CURRENT_AMI"
-      - echo "Current ENV $CURRENT_ENV"
       - echo "Installing jq..."
       - curl -qL -o /usr/bin/jq https://stedolan.github.io/jq/download/linux64/jq && chmod +x /usr/bin/jq
       - echo "Installing HashiCorp Terraform..."
@@ -20,13 +16,28 @@ phases:
       - unzip -o /tmp/terraform.zip -d /usr/bin
   build:
     commands:
-      - AMI_ID=$(jq '.builds[0].artifact_id' $CODEBUILD_SRC_DIR_BuildArtifacts/manifest.json | cut -d ":" -f2)
-      - |
-        if [ "$CURRENT_ENV" = "blue_env" ]; then
-          echo "Deploying to green"
-        else
-          echo "Deploying to blue"
-        fi
+      - AMI_ID=$(jq -r '.builds[0].artifact_id' $CODEBUILD_SRC_DIR_BuildArtifacts/manifest.json | cut -d ":" -f2)
+      - echo "Using AMI $AMI_ID"
       - cd app-iac
       - terraform init
-      - terraform apply -auto-approve
+      - |
+        if [ "$CURRENT_ENV" = "left_env" ]; then
+          echo "Left environment is currently blue"
+          terraform apply -auto-approve \
+            -var left_env_ami_id="$CURRENT_AMI" \
+            -var left_env_routing_weight="$BLUE_TRAFFIC_PERCENT" \
+            -var left_env_enabled=1 \
+            -var right_env_ami_id="$AMI_ID" \
+            -var right_env_routing_weight="$GREEN_TRAFFIC_PERCENT" \
+            -var right_env_enabled=1
+
+        else
+          echo "Right environment is currently blue"
+          terraform apply -auto-approve \
+            -var left_env_ami_id="$AMI_ID" \
+            -var left_env_routing_weight="$GREEN_TRAFFIC_PERCENT" \
+            -var left_env_enabled=1 \
+            -var right_env_ami_id="$CURRENT_AMI" \
+            -var right_env_routing_weight="$BLUE_TRAFFIC_PERCENT" \
+            -var right_env_enabled=1
+        fi

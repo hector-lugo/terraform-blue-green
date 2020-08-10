@@ -244,4 +244,64 @@ resource "aws_codepipeline" "main" {
       }
     }
   }
+
+  stage {
+    name = "Canary"
+
+    action {
+      name     = "Approval"
+      category = "Approval"
+      owner    = "AWS"
+      provider = "Manual"
+      version  = "1"
+    }
+
+    action {
+      name             = "Deploy"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      run_order        = 2
+
+      input_artifacts  = ["SourceArtifact", "BuildArtifacts"]
+      output_artifacts = ["CanaryArtifacts"]
+
+      configuration = {
+        PrimarySource = "SourceArtifact"
+        ProjectName          = var.deployment_project
+        EnvironmentVariables = file("${path.module}/deployment_configs/canary.json")
+      }
+    }
+  }
+
+  stage {
+    name = "Finish"
+
+    action {
+      name     = "Approval"
+      category = "Approval"
+      owner    = "AWS"
+      provider = "Manual"
+      version  = "1"
+    }
+
+    action {
+      name             = "Deploy"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      version          = "1"
+      run_order        = 2
+
+      input_artifacts  = ["SourceArtifact", "BuildArtifacts"]
+      output_artifacts = ["FinishArtifacts"]
+
+      configuration = {
+        PrimarySource = "SourceArtifact"
+        ProjectName          = var.deployment_project
+        EnvironmentVariables = file("${path.module}/deployment_configs/finish.json")
+      }
+    }
+  }
 }
