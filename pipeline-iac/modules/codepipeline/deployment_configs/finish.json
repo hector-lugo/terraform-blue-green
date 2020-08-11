@@ -13,5 +13,10 @@
     "name": "GREEN_ENV_ENABLED",
     "value": "1",
     "type": "PLAINTEXT"
+  },
+  {
+    "name": "UPDATE_POINTERS",
+    "value": "1",
+    "type": "PLAINTEXT"
   }
 ]

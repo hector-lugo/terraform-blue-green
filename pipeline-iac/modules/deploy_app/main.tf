@@ -47,6 +47,7 @@ data "aws_iam_policy_document" "codebuild" {
     actions = [
       "ssm:DescribeParameters",
       "ssm:GetParameter",
+      "ssm:PutParameter",
       "ssm:GetParameters"
     ]
 

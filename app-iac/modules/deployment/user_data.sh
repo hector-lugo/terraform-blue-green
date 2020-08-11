@@ -9,4 +9,4 @@ chown -R ec2-user:apache /var/www
 chmod 2775 /var/www
 find /var/www -type d -exec chmod 2775 {} \;
 find /var/www -type f -exec chmod 0664 {} \;
-echo "<p>Deployment name: ${var.deployment_name}</p>" > /var/www/html/index.php
+echo "<p>Deployment name: ${var.deployment_name}</p>" > /var/www/html/environment.php

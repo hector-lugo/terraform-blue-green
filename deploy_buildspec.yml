@@ -41,3 +41,16 @@ phases:
             -var right_env_routing_weight="$BLUE_TRAFFIC_PERCENT" \
             -var right_env_enabled=1
         fi
+      - |
+        if [ "$UPDATE_POINTERS" = "1" ]; then
+          echo "Updating current AMI"
+          aws ssm put-parameter --overwrite --name "/hlugo/terraform-bg/current-ami" --value "$AMI_ID"
+
+          if [ "$CURRENT_ENV" = "left_env" ]; then
+            echo "Updating current environment to right_env"
+            aws ssm put-parameter --overwrite --name "/hlugo/terraform-bg/current-env" --value "right_env"
+          else
+            echo "Updating current environment to left_env"
+            aws ssm put-parameter --overwrite --name "/hlugo/terraform-bg/current-env" --value "left_env"
+          fi
+        fi
