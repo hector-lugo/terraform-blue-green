@@ -4,6 +4,8 @@ resource "aws_route53_record" "main" {
   type    = "A"
   set_identifier = var.set_identifier
 
+  count = (var.enabled) ? 1 : 0
+
   weighted_routing_policy {
     weight = var.weight
   }

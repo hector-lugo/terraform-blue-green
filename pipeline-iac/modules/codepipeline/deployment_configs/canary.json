@@ -10,6 +10,11 @@
     "type": "PLAINTEXT"
   },
   {
+    "name": "BLUE_ENV_ENABLED",
+    "value": "1",
+    "type": "PLAINTEXT"
+  },
+  {
     "name": "GREEN_ENV_ENABLED",
     "value": "1",
     "type": "PLAINTEXT"

@@ -26,20 +26,20 @@ phases:
           terraform apply -auto-approve \
             -var left_env_ami_id="$CURRENT_AMI" \
             -var left_env_routing_weight="$BLUE_TRAFFIC_PERCENT" \
-            -var left_env_enabled=1 \
+            -var left_env_enabled=$BLUE_ENV_ENABLED \
             -var right_env_ami_id="$AMI_ID" \
             -var right_env_routing_weight="$GREEN_TRAFFIC_PERCENT" \
-            -var right_env_enabled=1
+            -var right_env_enabled=$GREEN_ENV_ENABLED
 
         else
           echo "Right environment is currently blue"
           terraform apply -auto-approve \
             -var left_env_ami_id="$AMI_ID" \
             -var left_env_routing_weight="$GREEN_TRAFFIC_PERCENT" \
-            -var left_env_enabled=1 \
+            -var left_env_enabled=$GREEN_ENV_ENABLED \
             -var right_env_ami_id="$CURRENT_AMI" \
             -var right_env_routing_weight="$BLUE_TRAFFIC_PERCENT" \
-            -var right_env_enabled=1
+            -var right_env_enabled=$BLUE_ENV_ENABLED
         fi
       - |
         if [ "$UPDATE_POINTERS" = "1" ]; then

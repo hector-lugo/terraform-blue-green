@@ -1,7 +1,7 @@
 output "load_balancer_dns" {
-  value = aws_lb.alb.dns_name
+  value = (var.enabled ? aws_lb.alb[0].dns_name : "")
 }
 
 output "load_balancer_zone_id" {
-  value = aws_lb.alb.zone_id
+  value = (var.enabled ? aws_lb.alb[0].zone_id : "")
 }

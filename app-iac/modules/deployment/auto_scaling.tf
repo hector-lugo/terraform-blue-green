@@ -31,6 +31,8 @@ resource "aws_autoscaling_group" "main" {
   max_size           = 2
   min_size           = 2
 
+  count = (var.enabled) ? 1 : 0
+
   vpc_zone_identifier = var.server_subnets
 
   launch_template {
@@ -38,5 +40,5 @@ resource "aws_autoscaling_group" "main" {
     version = "$Latest"
   }
 
-  target_group_arns = [aws_lb_target_group.alb_tg.arn]
+  target_group_arns = [aws_lb_target_group.alb_tg[0].arn]
 }
