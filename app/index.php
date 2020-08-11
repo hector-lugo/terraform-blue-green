@@ -3,6 +3,6 @@
         <title>Blue Green test</title>
     </head>
     <body>
-        <p>Hello World!</p>
+        <p><?php echo 'Hello World'; ?></p>
     </body>
 </html>

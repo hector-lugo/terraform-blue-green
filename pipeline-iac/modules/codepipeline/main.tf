@@ -47,7 +47,7 @@ resource "aws_iam_policy_attachment" "codepipeline_policy_attachement" {
   policy_arn = aws_iam_policy.codecommit-event-policy.arn
 }
 
-resource "aws_cloudwatch_event_rule" "codecommit_event_rule" {
+/*resource "aws_cloudwatch_event_rule" "codecommit_event_rule" {
   name        = format("%s-%s-codecommit_event_rule", var.pipeline_name, var.prefix)
   description = "CodePipeline notification"
 
@@ -71,7 +71,7 @@ resource "aws_cloudwatch_event_target" "codecommit_event_target" {
   rule      = aws_cloudwatch_event_rule.codecommit_event_rule.name
   role_arn  = aws_iam_role.codecommit_event_role.arn
   arn       = aws_codepipeline.main.arn
-}
+}*/
 
 data "aws_iam_policy_document" "codepipeline_assumerole" {
   statement {
@@ -191,7 +191,7 @@ resource "aws_codepipeline" "main" {
       configuration = {
         RepositoryName       = var.repository_name
         BranchName           = "master"
-        PollForSourceChanges = "false"
+        PollForSourceChanges = false
       }
     }
   }

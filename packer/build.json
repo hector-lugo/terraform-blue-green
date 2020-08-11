@@ -1,5 +1,6 @@
 {
   "variables": {
+    "revision": "{{ env `CODEBUILD_RESOLVED_SOURCE_VERSION` }}"
   },
   "builders": [
     {
@@ -24,8 +25,14 @@
         "sudo usermod -a -G apache ec2-user",
         "sudo chown -R ec2-user:apache /var/www",
         "sudo find /var/www -type d -exec chmod 2775 {} \\;",
-        "sudo find /var/www -type f -exec chmod 0664 {} \\;"
+        "sudo find /var/www -type f -exec chmod 0664 {} \\;",
+        "echo \"<p>Current revision: {{ user `revision` }}</p>\" > /var/www/html/version.php"
       ]
+    },
+    {
+      "type": "file",
+      "source": "./app/",
+      "destination": "/var/www/html"
     }
   ],
   "post-processors": [
